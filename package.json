@@ -1,0 +1,27 @@
+{
+  "name": "cli-word-guess",
+  "version": "1.0.0",
+  "description": "A command line interface word guess game",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Jayrene1/CLI-Word-Guess.git"
+  },
+  "keywords": [
+    "wordguess",
+    "constructors",
+    "hangman"
+  ],
+  "author": "Joshua Arcega",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Jayrene1/CLI-Word-Guess/issues"
+  },
+  "homepage": "https://github.com/Jayrene1/CLI-Word-Guess#readme",
+  "dependencies": {
+    "inquirer": "^6.2.2"
+  }
+}
