@@ -1,5 +1,6 @@
 var Word = require("./word");
 var inquirer = require("inquirer");
+var colors = require("colors");
 
 var guitarists = ["EDDIE VAN HALEN", "JIMMY PAGE", "JIMI HENDRIX", "SLASH", "STEVIE RAY VAUGHAN", "GEORGE HARRISON", "BRIAN MAY", "CHET ATKINS", "JOHN MAYER", "KIRK HAMMETT"];
 var chosenWord;
@@ -12,13 +13,13 @@ function gameStart() {
     chosenWord = new Word(guitarists[randomizer]);
     chosenWord.createLetters(); // initialize Letters constructor inside Word constructor
     wordInstance = chosenWord.wordString();
-    console.log("\nNEW GAME STARTED! Please enter a letter and press enter to make a guess.");
+    console.log("\n|| GUITARIST WORD GUESS ||\n".underline.green + "\nInstructions: A famous electric guitarist has been chosen.\nGuess their name by entering a letter on our keyboard and pressing enter.".cyan);
     logGuessesRemaining();
     gamePrompt();
 }
 
 function logGuessesRemaining() {
-    console.log(`You have ${guessesRemaining} guesses remaining.`);
+    console.log('\nYou have ' + guessesRemaining.toString().bold.yellow + ' guesses remaining.');
 }
 
 function gamePrompt() {
@@ -29,10 +30,14 @@ function gamePrompt() {
             {
             type: "input",
             name: "char",
-            message: "\n Enter a letter to guess...",
+            message: "\n Enter a letter:",
             validate: function validateChar(name) {
-                var reg = /^[a-zA-Z]+$/;
-                return reg.test(name) || "Error, please enter a valid letter";
+                if (name.length > 1) {
+                    return "Error, please enter 1 letter at a time";
+                } else {
+                    var reg = /^[a-zA-Z]+$/;
+                    return reg.test(name) || "Error, please enter a valid letter";
+                    }
                 }
             }
         ]).then(answers => {
@@ -44,6 +49,7 @@ function gamePrompt() {
             chosenWord.arrOfLetters[i].guessed = true;
         }
         console.log(chosenWord.wordString());
+        gameRestart();
     }
 }
 
@@ -54,9 +60,9 @@ function gameCheckGuess(answers) {
         chosenWord.wordGuess(char);
         if (chosenWord.wordString() !== wordInstance) { // check if any letters have been revealed since the last guess
             wordInstance = chosenWord.wordString();
-            console.log("Correct guess!");
+            console.log("Correct guess!".blue);
         } else {
-            console.log("That letter was not found. Try again.");
+            console.log("Incorrect letter. Try again.".red);
             guessesRemaining--;
             logGuessesRemaining();
         }
@@ -70,23 +76,27 @@ function gameEnd() {
     if (wordInstance.indexOf("_") !== -1) { // if there are still letters left to guess, run gamePrompt again...
         gamePrompt();
     } else {
-        console.log(`YOU WON THE GAME! \n\n ${wordInstance}\n`);
-        inquirer.prompt([
-            {
-                type: "confirm",
-                name: "restart",
-                message: "Would you like to play again?",
-                default: "false"
-            }
-        ]).then(answers => {
-            if (answers.restart) { // if user chooses to restart game...
-                reset();
-                gameStart();
-            } else {
-                console.log("Thanks for playing!");
-            }
-        });
+        console.log("YOU WON THE GAME! The winning word was:".rainbow + "\n\n" + chosenWord.wordString().rainbow + "\n");
+        gameRestart();
     }
+}
+
+function gameRestart() {
+    inquirer.prompt([
+        {
+            type: "confirm",
+            name: "restart",
+            message: "Would you like to play again?",
+            default: "false"
+        }
+    ]).then(answers => {
+        if (answers.restart) { // if user chooses to restart game...
+            reset();
+            gameStart();
+        } else {
+            console.log("Thanks for playing!");
+        }
+    });
 }
 
 function reset() { // reset global variables

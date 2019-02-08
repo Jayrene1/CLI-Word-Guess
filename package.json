@@ -22,6 +22,7 @@
   },
   "homepage": "https://github.com/Jayrene1/CLI-Word-Guess#readme",
   "dependencies": {
+    "colors": "^1.3.3",
     "inquirer": "^6.2.2"
   }
 }
